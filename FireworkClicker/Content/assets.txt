@@ -1,0 +1,23 @@
+﻿circle and particle texture used from particle exercise tutorial
+Purpose font was used for non commercial usage and can be found here https://www.urbanfonts.com/fonts/Purpose.font
+firework explosion sound used with the mixkit License for non-commerical use and can be found here https://mixkit.co/license/#sfxFree
+renewal by airtone (c) copyright 2022 Licensed under a Creative Commons Attribution Noncommercial  (3.0) license. http://dig.ccmixter.org/files/airtone/64601 
+error sound used with the mixkit License for non-commerical use and can be found here https://mixkit.co/license/#sfxFree
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
