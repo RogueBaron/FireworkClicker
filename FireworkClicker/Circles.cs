@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using GameArchitectureExample.Screens;
+using GameArchitectureExample.StateManagement;
 
 namespace FireworkClicker
 {
@@ -26,9 +28,13 @@ namespace FireworkClicker
 
         int size = 100;
 
-        public Circles(Game game) : base(game)
+        MainMenuScreen menuScreen;
+
+        public Circles(Game game, MainMenuScreen menu) : base(game)
         {
             _game = game;
+            menuScreen = menu;
+
             //_position = position;
             _rectange = new Rectangle(RandomHelper.Next(40,540), RandomHelper.Next(40,380), size, size);
 
@@ -82,15 +88,20 @@ namespace FireworkClicker
             
             spriteBatch.Begin();
 
-            // Option One (if you have integer size and coordinates)
-            if (collision)
+            if (!menuScreen.IsActive)
             {
-                spriteBatch.Draw(whiteRectangle, _rectange, Color.LightGreen);
+                // Option One (if you have integer size and coordinates)
+                if (collision)
+                {
+                    spriteBatch.Draw(whiteRectangle, _rectange, Color.LightGreen);
+                }
+                else
+                {
+                    spriteBatch.Draw(whiteRectangle, _rectange, Color.Red);
+                }
             }
-            else
-            {
-                spriteBatch.Draw(whiteRectangle, _rectange, Color.Red);
-            }
+
+
 
             spriteBatch.End();
         }

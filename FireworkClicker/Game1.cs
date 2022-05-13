@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Media;
 using System.Collections.Generic;
+using GameArchitectureExample.Screens;
+using GameArchitectureExample.StateManagement;
 
 namespace FireworkClicker
 {
@@ -12,6 +14,7 @@ namespace FireworkClicker
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
+        private readonly ScreenManager _screenManager;
 
         MouseState _priorMouse;
         KeyboardState _priorKeyboard;
@@ -31,6 +34,7 @@ namespace FireworkClicker
         public int score;
         public int highscore;
         bool shake = false;
+        MainMenuScreen menuscrn = new MainMenuScreen();
 
         public Vector2 Position { get; set; }
         public Vector2 Velocity { get; set; }
@@ -41,6 +45,18 @@ namespace FireworkClicker
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
+            //_graphics.IsFullScreen = true;
+
+            var screenFactory = new ScreenFactory();
+            Services.AddService(typeof(IScreenFactory), screenFactory);
+
+            _screenManager = new ScreenManager(this);
+            Components.Add(_screenManager);
+
+            
+            //_screenManager.AddScreen(new BackgroundScreen(), null);
+            _screenManager.AddScreen(menuscrn, null);
+
         }
 
         protected override void Initialize()
@@ -55,7 +71,7 @@ namespace FireworkClicker
             PixieParticleSystem pixie = new PixieParticleSystem(this, this);
             Components.Add(pixie);
 
-            circle = new Circles(this);
+            circle = new Circles(this, menuscrn);
 
             Components.Add(circle);
 
@@ -83,6 +99,8 @@ namespace FireworkClicker
 
         protected override void Update(GameTime gameTime)
         {
+
+
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
@@ -143,22 +161,29 @@ namespace FireworkClicker
 
         protected override void Draw(GameTime gameTime)
         {
+
+
             Matrix tranformation = Matrix.CreateTranslation(RandomHelper.Next(-10,10), RandomHelper.Next(-10, 10), 0);
 
             GraphicsDevice.Clear(Color.Black);
 
-            if (shake)
+            if (!menuscrn.IsActive)
             {
-                _spriteBatch.Begin(transformMatrix: tranformation);
-                _spriteBatch.DrawString(purposeFont, "Highcore: " + highscore.ToString() + "\nScore: " + score.ToString(), new Vector2(10, 10), Color.White);
-                _spriteBatch.End();
+                if (shake)
+                {
+                    _spriteBatch.Begin(transformMatrix: tranformation);
+                    _spriteBatch.DrawString(purposeFont, "Highcore: " + highscore.ToString() + "\nScore: " + score.ToString(), new Vector2(10, 10), Color.White);
+                    _spriteBatch.End();
+                }
+                else
+                {
+                    _spriteBatch.Begin();
+                    _spriteBatch.DrawString(purposeFont, "Highcore: " + highscore.ToString() + "\nScore: " + score.ToString(), new Vector2(10, 10), Color.White);
+                    _spriteBatch.End();
+                }
             }
-            else
-            {
-                _spriteBatch.Begin();
-                _spriteBatch.DrawString(purposeFont, "Highcore: " + highscore.ToString() + "\nScore: " + score.ToString(), new Vector2(10, 10), Color.White);
-                _spriteBatch.End();
-            }
+
+            
 
             base.Draw(gameTime);
         }
